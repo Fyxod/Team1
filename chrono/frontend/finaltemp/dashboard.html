@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weekly Timetable</title>
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script> 
+  <link rel="stylesheet" href="../src/output.css">
+  
+</head>
+<body class="bg-gray-900 text-white overflow-x-hidden">
+
+  <!-- Top Navbar -->
+  <div class="flex items-center justify-between p-4 bg-gray-800">
+    <button id="menuBtn" class="text-2xl">
+      <i class="fas fa-bars"></i>
+    </button>
+    <div class="flex items-center space-x-6">
+      <button id="notificationBtn" class="text-2xl">
+        <i class="fas fa-bell"></i>
+      </button>
+      <button class="text-2xl">
+        <i class="fas fa-user-circle"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Left Sidebar -->
+  <div id="leftSidebar" class="fixed top-0 left-0 w-64 h-full bg-gray-800 shadow-lg transform -translate-x-full transition-transform duration-300 z-50">
+    <div class="p-6">
+      <h2 class="text-2xl font-bold mb-4">Menu</h2>
+      <ul class="space-y-4">
+        <li><a href="#" class="hover:text-gray-400">Home</a></li>
+        <li><a href="#" class="hover:text-gray-400">Profile</a></li>
+        <li><a href="#" class="hover:text-gray-400">Settings</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Right Notification Sidebar -->
+  <div id="rightSidebar" class="fixed top-0 right-0 w-64 h-full bg-gray-800 shadow-lg transform translate-x-full transition-transform duration-300 z-50">
+    <div class="p-6">
+      <h2 class="text-2xl font-bold mb-4">Notifications</h2>
+      <ul class="space-y-4">
+        <li>No new notifications.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="flex flex-col items-center justify-center min-h-screen p-8">
+
+    <!-- Weekly Calendar Title -->
+    <div class="text-center mb-8">
+      <h1 class="text-3xl font-bold mb-2">Weekly Calendar</h1>
+
+      <!-- Week Range with Arrows -->
+      <div class="flex items-center justify-center space-x-4">
+        <button id="prevWeek" class="p-2 rounded-full bg-gray-700 hover:bg-gray-600">
+          <i class="fas fa-chevron-left"></i>
+        </button>
+
+        <div id="weekRange" class="text-lg font-semibold">
+          March 7 - March 14
+        </div>
+
+        <button id="nextWeek" class="p-2 rounded-full bg-gray-700 hover:bg-gray-600">
+          <i class="fas fa-chevron-right"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Days Circle Layout -->
+    <div id="daysContainer" class="flex space-x-6">
+      <!-- JavaScript will fill this -->
+    </div>
+
+  </div>
+
+  <!-- JavaScript Section -->
+  <script>
+    const menuBtn = document.getElementById('menuBtn');
+    const leftSidebar = document.getElementById('leftSidebar');
+    const notificationBtn = document.getElementById('notificationBtn');
+    const rightSidebar = document.getElementById('rightSidebar');
+
+    menuBtn.addEventListener('click', () => {
+      leftSidebar.classList.toggle('-translate-x-full');
+    });
+
+    notificationBtn.addEventListener('click', () => {
+      rightSidebar.classList.toggle('translate-x-full');
+    });
+
+    // Calendar Logic
+    const weekRange = document.getElementById('weekRange');
+    const daysContainer = document.getElementById('daysContainer');
+    const prevWeek = document.getElementById('prevWeek');
+    const nextWeek = document.getElementById('nextWeek');
+
+    let currentDate = new Date();
+
+    function getWeekDates(date) {
+      const start = new Date(date);
+      start.setDate(date.getDate() - date.getDay() + 1); // Monday start
+
+      const days = [];
+      for (let i = 0; i < 7; i++) {
+        const day = new Date(start);
+        day.setDate(start.getDate() + i);
+        days.push(day);
+      }
+      return days;
+    }
+
+    function updateCalendar() {
+      const weekDays = getWeekDates(currentDate);
+
+      // Update Week Range Title
+      const options = { month: 'short', day: 'numeric' };
+      weekRange.textContent = `${weekDays[0].toLocaleDateString(undefined, options)} - ${weekDays[6].toLocaleDateString(undefined, options)}`;
+
+      // Update Circles
+      daysContainer.innerHTML = '';
+      const dayNames = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
+      weekDays.forEach((day, index) => {
+        const dayCircle = document.createElement('div');
+        dayCircle.className = 'flex flex-col items-center justify-center w-16 h-16 rounded-full bg-gray-700 text-white text-center';
+        dayCircle.innerHTML = `
+          <div class="text-xl font-bold">${dayNames[index]}</div>
+          <div class="text-sm">${day.getDate()}</div>
+        `;
+        daysContainer.appendChild(dayCircle);
+      });
+    }
+
+    prevWeek.addEventListener('click', () => {
+      currentDate.setDate(currentDate.getDate() - 7);
+      updateCalendar();
+    });
+
+    nextWeek.addEventListener('click', () => {
+      currentDate.setDate(currentDate.getDate() + 7);
+      updateCalendar();
+    });
+
+    updateCalendar(); // Initial call
+  </script>
+
+</body>
+</html>

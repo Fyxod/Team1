@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="../src/output.css" rel="stylesheet">
+    <link href="../style.css" rel="stylesheet">
+
+    <title>Register | CHRONO</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@100..900&display=swap" rel="stylesheet">
+    
+
+</head>
+
+<body class="bg-gray-700 min-h-screen flex flex-col">
+
+  <!-- Navbar -->
+  <nav class="bg-gray-800 py-4 shadow-md">
+    <div class="container mx-auto flex justify-center">
+      <h1 class="text-white text-3xl font-bold tracking-wide chronos-font" >chronos
+    </div>
+  </nav>
+
+  <!-- Signup -->
+  <div class="flex-grow flex items-center justify-center">
+    <div class="bg-gray-800 p-8 rounded-2xl shadow-lg w-96 mt-8">
+      <h2 class="text-2xl font-bold text-white mb-6 text-center">Register</h2>
+      
+      <form id="signup-form" class="flex flex-col gap-4">
+        <input 
+          type="username" 
+          id="username"
+          placeholder="Username" 
+          required
+          class="px-4 py-3 border border-gray-300 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
+        />
+
+        <input 
+          type="email" 
+          id="email"
+          placeholder="Email" 
+          required
+          class="px-4 py-3 border border-gray-300 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
+        />
+        
+        <input 
+          type="password" 
+          id="password"
+          placeholder="Password" 
+          required
+          class="px-4 py-3 border border-gray-300 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
+        />
+        
+        <button 
+          type="submit"
+          class="bg-green-500 hover:bg-green-600 text-white font-semibold py-3 rounded-lg transition"
+        >
+          Register
+        </button>
+        
+        <div class="text-center text-sm text-gray-600">
+          Already have an account?
+          <a href="login.html" class="text-green-500 font-semibold hover:underline">Login</a>
+        </div>
+      </form>
+      <script src="../finaltemp/signup.js"></script>
+
+</script>
+    </div>
+  </div>
+
+</body>
+
+</html>
