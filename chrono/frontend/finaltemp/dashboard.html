@@ -1,138 +1,220 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Weekly Timetable</title>
-  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script> 
-  <link rel="stylesheet" href="../src/output.css">
-  
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    #eventModal.show { display: flex; }
+
+    .circle-day {
+      width: 80px;
+      height: 80px;
+      border-radius: 9999px;
+      background-color: #306C6C;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      transition: background-color 0.3s;
+    }
+
+    .circle-day:hover {
+      background-color: #3b8d8d;
+    }
+
+    .day-label {
+      font-size: 1.2rem;
+      font-weight: 500;
+    }
+  </style>
+  <link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+/>
+
 </head>
-<body class="bg-gray-900 text-white overflow-x-hidden">
+<body class="bg-gray-900 text-white overflow-x-hidden pt-20">
 
   <!-- Top Navbar -->
-  <div class="flex items-center justify-between p-4 bg-gray-800">
-    <button id="menuBtn" class="text-2xl">
-      <i class="fas fa-bars"></i>
-    </button>
+  <nav class="bg-gray-900 border-b border-gray-700 px-6 py-4 flex items-center justify-between shadow-md fixed top-0 w-full z-50">
+    <div class="flex items-center space-x-4">
+      <button id="menuBtn" class="text-white text-2xl focus:outline-none">
+        <i class="fas fa-bars"></i>
+      </button>
+      <span class="text-xl font-semibold tracking-wide">My Weekly Planner</span>
+    </div>
     <div class="flex items-center space-x-6">
-      <button id="notificationBtn" class="text-2xl">
+      <button id="notificationBtn" class="text-white text-xl hover:text-gray-400 focus:outline-none">
         <i class="fas fa-bell"></i>
       </button>
-      <button class="text-2xl">
+      <button class="text-white text-xl hover:text-gray-400 focus:outline-none">
         <i class="fas fa-user-circle"></i>
       </button>
     </div>
-  </div>
+  </nav>
 
   <!-- Left Sidebar -->
-  <div id="leftSidebar" class="fixed top-0 left-0 w-64 h-full bg-gray-800 shadow-lg transform -translate-x-full transition-transform duration-300 z-50">
-    <div class="p-6">
-      <h2 class="text-2xl font-bold mb-4">Menu</h2>
-      <ul class="space-y-4">
-        <li><a href="#" class="hover:text-gray-400">Home</a></li>
-        <li><a href="#" class="hover:text-gray-400">Profile</a></li>
-        <li><a href="#" class="hover:text-gray-400">Settings</a></li>
-      </ul>
+  <div id="leftSidebar" class="fixed top-0 left-0 w-64 h-full bg-gray-800 shadow-lg transform -translate-x-full transition-transform duration-300 ease-in-out z-50 pt-20 px-6">
+    <!-- Theme Toggle -->
+    <div class="flex items-center justify-between mb-6">
+      <span class="text-white font-semibold">Dark Mode</span>
+      <label class="relative inline-flex items-center cursor-pointer">
+        <input type="checkbox" id="themeToggle" class="sr-only">
+        <div class="w-10 h-5 bg-gray-600 rounded-full shadow-inner"></div>
+        <div class="dot absolute left-1 top-0.5 w-4 h-4 bg-white rounded-full shadow transform transition-transform"></div>
+      </label>
     </div>
+
+    <ul class="space-y-4">
+      <li><a href="#" class="flex items-center space-x-2 hover:text-gray-400"><i class="fas fa-home"></i><span>Home</span></a></li>
+      <li><a href="#" class="flex items-center space-x-2 hover:text-gray-400"><i class="fas fa-star"></i><span>Feature 1</span></a></li>
+      <li><a href="#" class="flex items-center space-x-2 hover:text-gray-400"><i class="fas fa-cogs"></i><span>Feature 2</span></a></li>
+      <li><a href="#" class="flex items-center space-x-2 hover:text-gray-400"><i class="fas fa-chart-line"></i><span>Feature 3</span></a></li>
+    </ul>
   </div>
 
-  <!-- Right Notification Sidebar -->
-  <div id="rightSidebar" class="fixed top-0 right-0 w-64 h-full bg-gray-800 shadow-lg transform translate-x-full transition-transform duration-300 z-50">
-    <div class="p-6">
-      <h2 class="text-2xl font-bold mb-4">Notifications</h2>
-      <ul class="space-y-4">
-        <li>No new notifications.</li>
-      </ul>
-    </div>
+  <!-- Right Sidebar -->
+  <div id="rightSidebar" class="fixed top-0 right-0 w-64 h-full bg-gray-800 shadow-lg transform translate-x-full transition-transform duration-300 ease-in-out z-50 pt-20 p-6">
+    <h2 class="text-2xl font-bold mb-4">Notifications</h2>
+    <ul class="space-y-4">
+      <li>No new notifications.</li>
+    </ul>
   </div>
 
   <!-- Main Content -->
   <div class="flex flex-col items-center justify-center min-h-screen p-8">
 
     <!-- Weekly Calendar Title -->
-    <div class="text-center mb-8">
-      <h1 class="text-3xl font-bold mb-2">Weekly Calendar</h1>
-
-      <!-- Week Range with Arrows -->
+    <div class="text-center mb-10">
+      <h1 class="text-4xl font-semibold tracking-widest text-red-300 mb-4">WEEKLY TIMETABLE</h1>
       <div class="flex items-center justify-center space-x-4">
         <button id="prevWeek" class="p-2 rounded-full bg-gray-700 hover:bg-gray-600">
           <i class="fas fa-chevron-left"></i>
         </button>
-
         <div id="weekRange" class="text-lg font-semibold">
-          March 7 - March 14
+          <!-- JS will update -->
         </div>
-
         <button id="nextWeek" class="p-2 rounded-full bg-gray-700 hover:bg-gray-600">
           <i class="fas fa-chevron-right"></i>
         </button>
       </div>
     </div>
 
-    <!-- Days Circle Layout -->
-    <div id="daysContainer" class="flex space-x-6">
-      <!-- JavaScript will fill this -->
+    <!-- Weekly Circles -->
+    <div id="daysContainer" class="grid grid-cols-3 gap-6 md:grid-cols-4 lg:grid-cols-7">
+      <!-- JS will populate -->
     </div>
-
   </div>
 
-  <!-- JavaScript Section -->
+  <!-- Modal for Events -->
+  <div id="eventModal" class="fixed inset-0 bg-black bg-opacity-60 hidden items-center justify-center z-50">
+    <div class="bg-gray-800 p-6 rounded-md w-80 text-center relative">
+      <button id="closeModal" class="absolute right-3 top-2 text-xl text-gray-400 hover:text-white">&times;</button>
+      <h2 class="text-xl font-semibold mb-4">Add Event</h2>
+      <input type="text" id="eventInput" placeholder="Event for the day" class="w-full p-2 rounded mb-4 text-black" />
+      <button id="saveEvent" class="bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded">Save</button>
+    </div>
+  </div>
+
+  <!-- JavaScript -->
   <script>
     const menuBtn = document.getElementById('menuBtn');
     const leftSidebar = document.getElementById('leftSidebar');
     const notificationBtn = document.getElementById('notificationBtn');
     const rightSidebar = document.getElementById('rightSidebar');
-
-    menuBtn.addEventListener('click', () => {
-      leftSidebar.classList.toggle('-translate-x-full');
-    });
-
-    notificationBtn.addEventListener('click', () => {
-      rightSidebar.classList.toggle('translate-x-full');
-    });
-
-    // Calendar Logic
     const weekRange = document.getElementById('weekRange');
     const daysContainer = document.getElementById('daysContainer');
     const prevWeek = document.getElementById('prevWeek');
     const nextWeek = document.getElementById('nextWeek');
+    const themeToggle = document.getElementById('themeToggle');
 
     let currentDate = new Date();
 
+    // Sidebar toggles
+    menuBtn.addEventListener('click', () => {
+      leftSidebar.classList.toggle('-translate-x-full');
+      leftSidebar.classList.toggle('translate-x-0');
+    });
+
+    notificationBtn.addEventListener('click', () => {
+      rightSidebar.classList.toggle('translate-x-full');
+      rightSidebar.classList.toggle('translate-x-0');
+    });
+
+    // Dark mode toggle
+    themeToggle.addEventListener('change', () => {
+      document.body.classList.toggle('bg-gray-900');
+      document.body.classList.toggle('bg-white');
+      document.body.classList.toggle('text-white');
+      document.body.classList.toggle('text-black');
+    });
+
+    // Modal logic
+    const eventModal = document.getElementById('eventModal');
+    const closeModal = document.getElementById('closeModal');
+    const saveEvent = document.getElementById('saveEvent');
+    const eventInput = document.getElementById('eventInput');
+    let selectedDayKey = '';
+
+    closeModal.addEventListener('click', () => {
+      eventModal.classList.remove('show');
+    });
+
     function getWeekDates(date) {
       const start = new Date(date);
-      start.setDate(date.getDate() - date.getDay() + 1); // Monday start
-
+      const day = date.getDay();
+      const diff = date.getDate() - day + (day === 0 ? -6 : 1); // Adjust for Monday start
+      start.setDate(diff);
       const days = [];
       for (let i = 0; i < 7; i++) {
-        const day = new Date(start);
-        day.setDate(start.getDate() + i);
-        days.push(day);
+        const d = new Date(start);
+        d.setDate(start.getDate() + i);
+        days.push(d);
       }
       return days;
     }
 
     function updateCalendar() {
       const weekDays = getWeekDates(currentDate);
-
-      // Update Week Range Title
       const options = { month: 'short', day: 'numeric' };
       weekRange.textContent = `${weekDays[0].toLocaleDateString(undefined, options)} - ${weekDays[6].toLocaleDateString(undefined, options)}`;
 
-      // Update Circles
+      const dayLabels = ['M', 'T', 'W', 'Th', 'F', 'Sa', 'Su'];
       daysContainer.innerHTML = '';
-      const dayNames = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
-      weekDays.forEach((day, index) => {
-        const dayCircle = document.createElement('div');
-        dayCircle.className = 'flex flex-col items-center justify-center w-16 h-16 rounded-full bg-gray-700 text-white text-center';
-        dayCircle.innerHTML = `
-          <div class="text-xl font-bold">${dayNames[index]}</div>
-          <div class="text-sm">${day.getDate()}</div>
+
+      weekDays.forEach((day, i) => {
+        const dayKey = `${day.getFullYear()}-${day.getMonth()}-${day.getDate()}`;
+        const saved = localStorage.getItem(`event-${dayKey}`);
+
+        const div = document.createElement('div');
+        div.className = 'circle-day cursor-pointer';
+        div.innerHTML = `
+          <div class="day-label">${dayLabels[i]}</div>
+          <div class="text-xs">${day.getDate()}</div>
+          ${saved ? `<div class="text-xs mt-1 truncate w-12">${saved.slice(0, 6)}...</div>` : ''}
         `;
-        daysContainer.appendChild(dayCircle);
+        div.addEventListener('click', () => {
+          selectedDayKey = dayKey;
+          eventInput.value = saved || '';
+          eventModal.classList.add('show');
+        });
+
+        daysContainer.appendChild(div);
       });
     }
+
+    saveEvent.addEventListener('click', () => {
+      const value = eventInput.value.trim();
+      if (value) {
+        localStorage.setItem(`event-${selectedDayKey}`, value);
+      }
+      eventModal.classList.remove('show');
+      updateCalendar();
+    });
 
     prevWeek.addEventListener('click', () => {
       currentDate.setDate(currentDate.getDate() - 7);
@@ -144,8 +226,7 @@
       updateCalendar();
     });
 
-    updateCalendar(); // Initial call
+    updateCalendar();
   </script>
-
 </body>
 </html>
