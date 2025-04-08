@@ -2,231 +2,89 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Weekly Timetable</title>
-  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-  <style>
-    #eventModal.show { display: flex; }
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chrono</title>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;700&display=swap" rel="stylesheet" />
 
-    .circle-day {
-      width: 80px;
-      height: 80px;
-      border-radius: 9999px;
-      background-color: #306C6C;
-      color: white;
+  <style>
+    body {
+      margin: 0;
+      background-color: #1e1e1e;
+      font-family: Arial, sans-serif;
+    }
+
+    .navbar {
+      background-color: #2b2b2b;
       display: flex;
       align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      transition: background-color 0.3s;
+      justify-content: space-between;
+      padding: 10px 20px;
+      border-bottom: 1px solid #444;
     }
 
-    .circle-day:hover {
-      background-color: #3b8d8d;
+    .navbar-left,
+    .navbar-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
 
-    .day-label {
-      font-size: 1.2rem;
-      font-weight: 500;
+    .icon-button {
+      background: none;
+      border: none;
+      padding: 8px;
+      cursor: pointer;
+      border-radius: 6px;
+      transition: background 0.2s;
+    }
+
+    .icon-button:hover {
+      background: #3a3a3a;
+    }
+
+    .material-symbols-outlined {
+      font-variation-settings:
+        'FILL' 0,
+        'wght' 400,
+        'GRAD' 0,
+        'opsz' 24;
+      font-size: 24px;
+      color: rgb(180, 180, 180);
+    }
+
+    .brand {
+      color: #e0e0e0;
+      font-size: 30px;
+      font-weight: semi-bold;
+      margin-left: 10px;
+      font-family: 'League Spartan', sans-serif;
     }
   </style>
-  <link
-  rel="stylesheet"
-  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-/>
-
 </head>
-<body class="bg-gray-900 text-white overflow-x-hidden pt-20">
-
-  <!-- Top Navbar -->
-  <nav class="bg-gray-900 border-b border-gray-700 px-6 py-4 flex items-center justify-between shadow-md fixed top-0 w-full z-50">
-    <div class="flex items-center space-x-4">
-      <button id="menuBtn" class="text-white text-2xl focus:outline-none">
-        <i class="fas fa-bars"></i>
+<body>
+  <div class="navbar">
+    <div class="navbar-left">
+      <button class="icon-button" id="home-icon">
+        <span class="material-symbols-outlined">home</span>
       </button>
-      <span class="text-xl font-semibold tracking-wide">My Weekly Planner</span>
-    </div>
-    <div class="flex items-center space-x-6">
-      <button id="notificationBtn" class="text-white text-xl hover:text-gray-400 focus:outline-none">
-        <i class="fas fa-bell"></i>
+      <button class="icon-button" id="grid-icon">
+        <span class="material-symbols-outlined">menu</span>
       </button>
-      <button class="text-white text-xl hover:text-gray-400 focus:outline-none">
-        <i class="fas fa-user-circle"></i>
+      <span class="brand">chrono</span>
+    </div>
+    <div class="navbar-right">
+      <button class="icon-button" id="bell-icon">
+        <span class="material-symbols-outlined">notifications</span>
+      </button>
+      <button class="icon-button" id="gear-icon">
+        <span class="material-symbols-outlined">settings</span>
       </button>
     </div>
-  </nav>
-
-  <!-- Left Sidebar -->
-  <div id="leftSidebar" class="fixed top-0 left-0 w-64 h-full bg-gray-800 shadow-lg transform -translate-x-full transition-transform duration-300 ease-in-out z-50 pt-20 px-6">
-    <!-- Theme Toggle -->
-    <div class="flex items-center justify-between mb-6">
-      <span class="text-white font-semibold">Dark Mode</span>
-      <label class="relative inline-flex items-center cursor-pointer">
-        <input type="checkbox" id="themeToggle" class="sr-only">
-        <div class="w-10 h-5 bg-gray-600 rounded-full shadow-inner"></div>
-        <div class="dot absolute left-1 top-0.5 w-4 h-4 bg-white rounded-full shadow transform transition-transform"></div>
-      </label>
-    </div>
-
-    <ul class="space-y-4">
-      <li><a href="#" class="flex items-center space-x-2 hover:text-gray-400"><i class="fas fa-home"></i><span>Home</span></a></li>
-      <li><a href="#" class="flex items-center space-x-2 hover:text-gray-400"><i class="fas fa-star"></i><span>Feature 1</span></a></li>
-      <li><a href="#" class="flex items-center space-x-2 hover:text-gray-400"><i class="fas fa-cogs"></i><span>Feature 2</span></a></li>
-      <li><a href="#" class="flex items-center space-x-2 hover:text-gray-400"><i class="fas fa-chart-line"></i><span>Feature 3</span></a></li>
-    </ul>
   </div>
-
-  <!-- Right Sidebar -->
-  <div id="rightSidebar" class="fixed top-0 right-0 w-64 h-full bg-gray-800 shadow-lg transform translate-x-full transition-transform duration-300 ease-in-out z-50 pt-20 p-6">
-    <h2 class="text-2xl font-bold mb-4">Notifications</h2>
-    <ul class="space-y-4">
-      <li>No new notifications.</li>
-    </ul>
+  <div id="calendar-wrapper" style="display: flex; justify-content: flex-end; margin-top: 30px; padding-right: 40px;">
+    <div id="calendar-container"></div>
   </div>
-
-  <!-- Main Content -->
-  <div class="flex flex-col items-center justify-center min-h-screen p-8">
-
-    <!-- Weekly Calendar Title -->
-    <div class="text-center mb-10">
-      <h1 class="text-4xl font-semibold tracking-widest text-red-300 mb-4">WEEKLY TIMETABLE</h1>
-      <div class="flex items-center justify-center space-x-4">
-        <button id="prevWeek" class="p-2 rounded-full bg-gray-700 hover:bg-gray-600">
-          <i class="fas fa-chevron-left"></i>
-        </button>
-        <div id="weekRange" class="text-lg font-semibold">
-          <!-- JS will update -->
-        </div>
-        <button id="nextWeek" class="p-2 rounded-full bg-gray-700 hover:bg-gray-600">
-          <i class="fas fa-chevron-right"></i>
-        </button>
-      </div>
-    </div>
-
-    <!-- Weekly Circles -->
-    <div id="daysContainer" class="grid grid-cols-3 gap-6 md:grid-cols-4 lg:grid-cols-7">
-      <!-- JS will populate -->
-    </div>
-  </div>
-
-  <!-- Modal for Events -->
-  <div id="eventModal" class="fixed inset-0 bg-black bg-opacity-60 hidden items-center justify-center z-50">
-    <div class="bg-gray-800 p-6 rounded-md w-80 text-center relative">
-      <button id="closeModal" class="absolute right-3 top-2 text-xl text-gray-400 hover:text-white">&times;</button>
-      <h2 class="text-xl font-semibold mb-4">Add Event</h2>
-      <input type="text" id="eventInput" placeholder="Event for the day" class="w-full p-2 rounded mb-4 text-black" />
-      <button id="saveEvent" class="bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded">Save</button>
-    </div>
-  </div>
-
-  <!-- JavaScript -->
-  <script>
-    const menuBtn = document.getElementById('menuBtn');
-    const leftSidebar = document.getElementById('leftSidebar');
-    const notificationBtn = document.getElementById('notificationBtn');
-    const rightSidebar = document.getElementById('rightSidebar');
-    const weekRange = document.getElementById('weekRange');
-    const daysContainer = document.getElementById('daysContainer');
-    const prevWeek = document.getElementById('prevWeek');
-    const nextWeek = document.getElementById('nextWeek');
-    const themeToggle = document.getElementById('themeToggle');
-
-    let currentDate = new Date();
-
-    // Sidebar toggles
-    menuBtn.addEventListener('click', () => {
-      leftSidebar.classList.toggle('-translate-x-full');
-      leftSidebar.classList.toggle('translate-x-0');
-    });
-
-    notificationBtn.addEventListener('click', () => {
-      rightSidebar.classList.toggle('translate-x-full');
-      rightSidebar.classList.toggle('translate-x-0');
-    });
-
-    // Dark mode toggle
-    themeToggle.addEventListener('change', () => {
-      document.body.classList.toggle('bg-gray-900');
-      document.body.classList.toggle('bg-white');
-      document.body.classList.toggle('text-white');
-      document.body.classList.toggle('text-black');
-    });
-
-    // Modal logic
-    const eventModal = document.getElementById('eventModal');
-    const closeModal = document.getElementById('closeModal');
-    const saveEvent = document.getElementById('saveEvent');
-    const eventInput = document.getElementById('eventInput');
-    let selectedDayKey = '';
-
-    closeModal.addEventListener('click', () => {
-      eventModal.classList.remove('show');
-    });
-
-    function getWeekDates(date) {
-      const start = new Date(date);
-      const day = date.getDay();
-      const diff = date.getDate() - day + (day === 0 ? -6 : 1); // Adjust for Monday start
-      start.setDate(diff);
-      const days = [];
-      for (let i = 0; i < 7; i++) {
-        const d = new Date(start);
-        d.setDate(start.getDate() + i);
-        days.push(d);
-      }
-      return days;
-    }
-
-    function updateCalendar() {
-      const weekDays = getWeekDates(currentDate);
-      const options = { month: 'short', day: 'numeric' };
-      weekRange.textContent = `${weekDays[0].toLocaleDateString(undefined, options)} - ${weekDays[6].toLocaleDateString(undefined, options)}`;
-
-      const dayLabels = ['M', 'T', 'W', 'Th', 'F', 'Sa', 'Su'];
-      daysContainer.innerHTML = '';
-
-      weekDays.forEach((day, i) => {
-        const dayKey = `${day.getFullYear()}-${day.getMonth()}-${day.getDate()}`;
-        const saved = localStorage.getItem(`event-${dayKey}`);
-
-        const div = document.createElement('div');
-        div.className = 'circle-day cursor-pointer';
-        div.innerHTML = `
-          <div class="day-label">${dayLabels[i]}</div>
-          <div class="text-xs">${day.getDate()}</div>
-          ${saved ? `<div class="text-xs mt-1 truncate w-12">${saved.slice(0, 6)}...</div>` : ''}
-        `;
-        div.addEventListener('click', () => {
-          selectedDayKey = dayKey;
-          eventInput.value = saved || '';
-          eventModal.classList.add('show');
-        });
-
-        daysContainer.appendChild(div);
-      });
-    }
-
-    saveEvent.addEventListener('click', () => {
-      const value = eventInput.value.trim();
-      if (value) {
-        localStorage.setItem(`event-${selectedDayKey}`, value);
-      }
-      eventModal.classList.remove('show');
-      updateCalendar();
-    });
-
-    prevWeek.addEventListener('click', () => {
-      currentDate.setDate(currentDate.getDate() - 7);
-      updateCalendar();
-    });
-
-    nextWeek.addEventListener('click', () => {
-      currentDate.setDate(currentDate.getDate() + 7);
-      updateCalendar();
-    });
-
-    updateCalendar();
-  </script>
+  <script src="dashboard.js" defer></script>
 </body>
 </html>
