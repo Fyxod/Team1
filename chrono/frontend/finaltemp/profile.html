@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Edit Profile - Chrono</title>
+  <link href="https://fonts.googleapis.com/css2?family=League+Spartan&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      margin: 0;
+      font-family: 'League Spartan', sans-serif;
+      background-color: #1e1e1e;
+      color: #eee;
+    }
+
+    /* --- NAVBAR --- */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #2e2e2e;
+      padding: 14px 24px;
+      border-bottom: 1px solid #444;
+    }
+
+    .navbar-left {
+      font-size: 22px;
+      font-weight: bold;
+      color: #fff;
+    }
+
+    .navbar-right {
+      display: flex;
+      gap: 20px;
+    }
+
+    .navbar-right a {
+      color: #ddd;
+      text-decoration: none;
+      font-size: 16px;
+      transition: color 0.2s;
+    }
+
+    .navbar-right a:hover {
+      color: #fff;
+    }
+
+    /* --- FORM LAYOUT --- */
+    .content-container {
+      padding: 30px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: calc(100vh - 60px);
+    }
+
+    .profile-edit-container {
+      background-color: #2b2b2b;
+      padding: 30px 40px;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+      width: 100%;
+      max-width: 350px;
+    }
+
+    .profile-edit-container h2 {
+      margin-bottom: 20px;
+      text-align: center;
+      font-weight: normal;
+      color: #e0e0e0;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 14px;
+      color: #aaa;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #444;
+      border-radius: 6px;
+      background-color: #1e1e1e;
+      color: #eee;
+      font-size: 16px;
+    }
+
+    .save-btn {
+      width: 100%;
+      padding: 12px 16px;
+      background-color: #4caf50;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .save-btn:hover {
+      background-color: #43a047;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <div class="navbar">
+    <div class="navbar-left">chrono</div>
+    <div class="navbar-right">
+      <a href="index.html">Home</a>
+      <a href="#">Calendar</a>
+      <a href="#">Settings</a>
+      <a href="#">Logout</a>
+    </div>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content-container">
+    <div class="profile-edit-container">
+      <h2>Edit Profile</h2>
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input id="username" type="text" placeholder="Enter username" />
+      </div>
+      <div class="form-group">
+        <label for="newPassword">New Password</label>
+        <input id="newPassword" type="password" placeholder="New password" />
+      </div>
+      <div class="form-group">
+        <label for="confirmPassword">Confirm Password</label>
+        <input id="confirmPassword" type="password" placeholder="Confirm password" />
+      </div>
+      <button class="save-btn" onclick="saveChanges()">Save Changes</button>
+    </div>
+  </div>
+
+  <script>
+    function saveChanges() {
+      const username = document.getElementById('username').value.trim();
+      const newPassword = document.getElementById('newPassword').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+
+      if (!username || !newPassword || !confirmPassword) {
+        alert("Please fill in all fields.");
+        return;
+      }
+
+      if (newPassword !== confirmPassword) {
+        alert("Passwords do not match.");
+        return;
+      }
+
+      // You could add your saving logic here
+      alert("Profile updated!");
+    }
+  </script>
+</body>
+</html>
