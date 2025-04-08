@@ -1,8 +1,6 @@
 const Notification = require("../models/Notification");
 
-// @desc    Create a new notification
-// @route   POST /api/notifications
-// @access  Private/Admin
+
 const createNotification = async (req, res) => {
   try {
     const { batch, title, message } = req.body;
@@ -20,9 +18,7 @@ const createNotification = async (req, res) => {
   }
 };
 
-// @desc    Get notifications for a batch
-// @route   GET /api/notifications/:batchId
-// @access  Private
+
 const getNotificationsForBatch = async (req, res) => {
   try {
     const notifications = await Notification.find({

@@ -8,32 +8,32 @@ const classSchema = new mongoose.Schema(
     },
     teacher: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User", // refers to a teacher
+      ref: "User", 
       required: true,
     },
     location: {
       type: String,
       required: true,
     },
-    // day: {
-    //   type: String,
-    //   required: true, // example: "Monday"
-    // },
-    // date: {
-    //   type: Date,
-    //   required: true, // specific calendar date
-    // },
+    day: {
+      type: String,
+      required: true, 
+    },
+    date: {
+      type: Date,
+      required: true, 
+    },
     timeSlot: {
       type: String,
-      required: true, // example: "10:00 AM - 11:00 AM"
+      required: true, 
     },
     durationMinutes: {
       type: Number,
-      required: true, // example: 60
+      required: true, 
     },
     batch: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Batch", // refers to the batch
+      ref: "Batch", 
       required: true,
     },
   },
