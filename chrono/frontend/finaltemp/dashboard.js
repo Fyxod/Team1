@@ -1,240 +1,116 @@
-// === Notification Popup ===
-const popup = document.createElement("div");
-popup.innerHTML = `
-  <div style="display: flex; justify-content: space-between; align-items: center;">
-    <span>no new notifications</span>
-    <button id="closePopup" style="
-      background: none;
-      border: none;
-      color: white;
-      font-size: 18px;
-      margin-left: 10px;
-      cursor: pointer;
-    ">&times;</button>
-  </div>
-`;
-popup.style.position = "absolute";
-popup.style.top = "60px";
-popup.style.right = "20px";
-popup.style.padding = "20px";
-popup.style.backgroundColor = "rgba(255, 255, 255, 0.1)";
-popup.style.color = "white";
-popup.style.borderRadius = "8px";
-popup.style.display = "none";
-popup.style.opacity = "0";
-popup.style.transition = "opacity 0.3s ease";
-popup.style.zIndex = "1000";
-document.body.appendChild(popup);
-
-const bellIcon = document.getElementById("bell-icon");
-let isVisible = false;
-
-bellIcon.addEventListener("click", (e) => {
-  e.stopPropagation();
-  isVisible = !isVisible;
-  if (isVisible) {
-    popup.style.display = "block";
-    setTimeout(() => {
-      popup.style.opacity = "1";
-    }, 10);
-  } else {
-    popup.style.opacity = "0";
-    setTimeout(() => {
-      popup.style.display = "none";
-    }, 300);
-  }
-});
-
-document.addEventListener("click", () => {
-  if (isVisible) {
-    popup.style.opacity = "0";
-    setTimeout(() => {
-      popup.style.display = "none";
-    }, 300);
-    isVisible = false;
-  }
-});
-
-popup.addEventListener("click", (e) => {
-  e.stopPropagation();
-});
-
-popup.querySelector("#closePopup").addEventListener("click", () => {
-  popup.style.opacity = "0";
-  setTimeout(() => {
-    popup.style.display = "none";
-    isVisible = false;
-  }, 300);
-});
-
-// === Calendar ===
-const calendarContainer = document.getElementById("calendar-container");
 const selectedDateDisplay = document.getElementById("selected-date");
+    const timeInput = document.getElementById("timeInput");
+    const subjectInput = document.getElementById("subjectInput");
+    const typeSelect = document.getElementById("typeSelect");
+    const roomSelect = document.getElementById("roomSelect");
+    const addEntryButton = document.getElementById("addEntry");
+    const entryList = document.getElementById("entryList");
+    const dateElement = document.getElementById("current-date");
 
-let currentDate = new Date();
+    let currentDate = new Date();
+    let currentDayKey = null;
 
-const createCalendar = (year, month) => {
-  const date = new Date(year, month, 1);
-  const daysInMonth = new Date(year, month + 1, 0).getDate();
-  const startDay = date.getDay();
-  const today = new Date();
-  const monthName = date.toLocaleString("default", { month: "long" });
+    let weeklyEntries = {
+      Sun: [], Mon: [], Tue: [], Wed: [], Thu: [], Fri: [], Sat: []
+    };
 
-  let calendarHTML = `
-    <div style="
-      max-width: 700px;
-      padding: 30px;
-      background: #2b2b2b;
-      color: white;
-      font-family: 'League Spartan', sans-serif;
-      border-radius: 12px;
-      box-shadow: 0 2px 15px rgba(0,0,0,0.5);
-      font-size: 18px;
-    ">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-        <button id="prevMonth" style="
-          background: none;
-          border: none;
-          color: #aaa;
-          font-size: 20px;
-          cursor: pointer;
-          padding: 5px 10px;
-          border-radius: 6px;
-        ">&larr;</button>
-        <h2 style="margin: 0;">${monthName} ${year}</h2>
-        <button id="nextMonth" style="
-          background: none;
-          border: none;
-          color: #aaa;
-          font-size: 20px;
-          cursor: pointer;
-          padding: 5px 10px;
-          border-radius: 6px;
-        ">&rarr;</button>
-      </div>
+    const now = new Date();
+    const options = { weekday: "short" };
+    const dayName = now.toLocaleDateString(undefined, options);
+    const formattedDate = `${dayName}, ${String(now.getDate()).padStart(2, '0')}/${String(now.getMonth() + 1).padStart(2, '0')}`;
+    dateElement.textContent = formattedDate;
 
-      <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; text-align: center; font-weight: bold; color: #aaa;">
-        <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
-      </div>
-      <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; margin-top: 10px;">
-  `;
+    const createCalendar = (year, month) => {
+      const date = new Date(year, month, 1);
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+      const startDay = date.getDay();
+      const today = new Date();
+      const monthName = date.toLocaleString("default", { month: "long" });
 
-  for (let i = 0; i < startDay; i++) {
-    calendarHTML += `<div></div>`;
-  }
+      let calendarHTML = `
+        <div style="max-width: 700px; padding: 30px; background: #2b2b2b; color: white; font-family: 'League Spartan', sans-serif; border-radius: 12px; box-shadow: 0 2px 15px rgba(0,0,0,0.5); font-size: 18px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <button id="prevMonth" style="background: none; border: none; color: #aaa; font-size: 20px; cursor: pointer; padding: 5px 10px; border-radius: 6px;">&larr;</button>
+            <h2 style="margin: 0;">${monthName} ${year}</h2>
+            <button id="nextMonth" style="background: none; border: none; color: #aaa; font-size: 20px; cursor: pointer; padding: 5px 10px; border-radius: 6px;">&rarr;</button>
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; text-align: center; font-weight: bold; color: #aaa;">
+            <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; margin-top: 10px;">
+      `;
 
-  for (let day = 1; day <= daysInMonth; day++) {
-    const dateObj = new Date(year, month, day);
-    const isToday =
-      day === today.getDate() &&
-      month === today.getMonth() &&
-      year === today.getFullYear();
+      for (let i = 0; i < startDay; i++) calendarHTML += `<div></div>`;
 
-    const isPast = dateObj < new Date(today.getFullYear(), today.getMonth(), today.getDate());
-    const bgColor = isToday ? "#4caf50" : isPast ? "#111" : "#1e1e1e";
-    const textColor = isPast ? "#777" : "white";
-    const hoverColor = isToday ? "#43a047" : isPast ? "#111" : "#3a3a3a";
-    const cursorStyle = isPast ? "default" : "pointer";
-    const clickHandler = isPast ? "" : `onclick="handleDateClick(${day}, ${month}, ${year})"`;
+      for (let day = 1; day <= daysInMonth; day++) {
+        const dateObj = new Date(year, month, day);
+        const isToday = day === today.getDate() && month === today.getMonth() && year === today.getFullYear();
+        const isPast = dateObj < new Date(today.getFullYear(), today.getMonth(), today.getDate());
+        const bgColor = isToday ? "#4caf50" : isPast ? "#111" : "#1e1e1e";
+        const textColor = isPast ? "#777" : "white";
+        const hoverColor = isToday ? "#43a047" : isPast ? "#111" : "#3a3a3a";
+        const cursorStyle = isPast ? "default" : "pointer";
+        const clickHandler = isPast ? "" : `onclick="handleDateClick(${day}, ${month}, ${year})"`;
 
-    calendarHTML += `
-      <div style="
-        padding: 16px;
-        border-radius: 6px;
-        background: ${bgColor};
-        color: ${textColor};
-        cursor: ${cursorStyle};
-        transition: background 0.2s, transform 0.2s;
-        font-weight: ${isToday ? "bold" : "normal"};
-        box-shadow: ${isToday ? "0 0 8px #4caf50aa" : "none"};
-        transform: ${isToday ? "scale(1.05)" : "none"};
-        font-size: 18px;
-      "
-      ${clickHandler}
-      ${!isPast ? `
-        onmouseover="this.style.background='${hoverColor}'"
-        onmouseout="this.style.background='${bgColor}'"
-      ` : ""}>
-        ${day}
-      </div>
-    `;
-  }
+        calendarHTML += `
+          <div style="padding: 16px; border-radius: 6px; background: ${bgColor}; color: ${textColor}; cursor: ${cursorStyle}; transition: background 0.2s, transform 0.2s; font-weight: ${isToday ? "bold" : "normal"}; box-shadow: ${isToday ? "0 0 8px #4caf50aa" : "none"}; transform: ${isToday ? "scale(1.05)" : "none"}; font-size: 18px;" ${clickHandler} ${!isPast ? `onmouseover="this.style.background='${hoverColor}'" onmouseout="this.style.background='${bgColor}'"` : ""}>
+            ${day}
+          </div>`;
+      }
+      calendarHTML += `</div></div>`;
+      document.getElementById("calendar-container").innerHTML = calendarHTML;
+      document.getElementById("prevMonth").addEventListener("click", () => {
+        currentDate.setMonth(currentDate.getMonth() - 1);
+        createCalendar(currentDate.getFullYear(), currentDate.getMonth());
+      });
+      document.getElementById("nextMonth").addEventListener("click", () => {
+        currentDate.setMonth(currentDate.getMonth() + 1);
+        createCalendar(currentDate.getFullYear(), currentDate.getMonth());
+      });
+    };
 
-  calendarHTML += `</div></div>`;
-  calendarContainer.innerHTML = calendarHTML;
+    function handleDateClick(day, month, year) {
+      const date = new Date(year, month, day);
+      const dayName = date.toLocaleDateString(undefined, { weekday: "short" });
+      const formatted = `${dayName}, ${String(day).padStart(2, '0')}/${String(month + 1).padStart(2, '0')}`;
+      currentDayKey = dayName;
+      if (selectedDateDisplay) selectedDateDisplay.textContent = `Selected: ${formatted}`;
+      renderEntries();
+    }
 
-  document.getElementById("prevMonth").addEventListener("click", () => {
-    currentDate.setMonth(currentDate.getMonth() - 1);
+    addEntryButton.addEventListener("click", () => {
+      if (!currentDayKey) {
+        alert("Please select a date first.");
+        return;
+      }
+      const time = timeInput.value.trim();
+      const subject = subjectInput.value.trim();
+      const type = typeSelect.value;
+      const room = roomSelect.value;
+      if (!time || !subject || type === "Type" || room === "Room") {
+        alert("Please fill in all fields.");
+        return;
+      }
+      const entry = { time, subject, type, room };
+      weeklyEntries[currentDayKey].push(entry);
+      renderEntries();
+      timeInput.value = "";
+      subjectInput.value = "";
+      typeSelect.selectedIndex = 0;
+      roomSelect.selectedIndex = 0;
+    });
+
+    function renderEntries() {
+      entryList.innerHTML = "";
+      if (!currentDayKey || !weeklyEntries[currentDayKey]) return;
+      weeklyEntries[currentDayKey].forEach((entry) => {
+        const div = document.createElement("div");
+        div.style.padding = "8px 0";
+        div.style.borderBottom = "1px solid #333";
+        div.innerHTML = `<strong>${entry.time}</strong> — ${entry.subject} (${entry.type}, ${entry.room})`;
+        entryList.appendChild(div);
+      });
+    }
+
     createCalendar(currentDate.getFullYear(), currentDate.getMonth());
-  });
-
-  document.getElementById("nextMonth").addEventListener("click", () => {
-    currentDate.setMonth(currentDate.getMonth() + 1);
-    createCalendar(currentDate.getFullYear(), currentDate.getMonth());
-  });
-};
-
-function handleDateClick(day, month, year) {
-  const date = new Date(year, month, day);
-  const dayName = date.toLocaleDateString(undefined, { weekday: "short" });
-  const formatted = `${dayName}, ${String(day).padStart(2, '0')}/${String(month + 1).padStart(2, '0')}`;
-  if (selectedDateDisplay) {
-    selectedDateDisplay.textContent = `Selected: ${formatted}`;
-  }
-}
-
-createCalendar(currentDate.getFullYear(), currentDate.getMonth());
-handleDateClick(currentDate.getDate(), currentDate.getMonth(), currentDate.getFullYear());
-
-
-// === Navbar Center Date ===
-const dateElement = document.getElementById("current-date");
-const now = new Date();
-const options = { weekday: "short" };
-const dayName = now.toLocaleDateString(undefined, options);
-const formattedDate = `${dayName}, ${String(now.getDate()).padStart(2, '0')}/${String(now.getMonth() + 1).padStart(2, '0')}`;
-dateElement.textContent = formattedDate;
-
-const timeInput = document.getElementById("timeInput");
-const subjectInput = document.getElementById("subjectInput");
-const typeSelect = document.getElementById("typeSelect");
-const roomSelect = document.getElementById("roomSelect");
-const addEntryButton = document.getElementById("addEntry");
-const entryList = document.getElementById("entryList");
-
-let entries = [];
-
-addEntryButton.addEventListener("click", () => {
-  const time = timeInput.value.trim();
-  const subject = subjectInput.value.trim();
-  const type = typeSelect.value;
-  const room = roomSelect.value;
-
-  if (!time || !subject || type === "Type" || room === "Room") {
-    alert("Please fill in all fields.");
-    return;
-  }
-
-  const entry = { time, subject, type, room };
-  entries.push(entry);
-  renderEntries();
-
-  // Clear form
-  timeInput.value = "";
-  subjectInput.value = "";
-  typeSelect.selectedIndex = 0;
-  roomSelect.selectedIndex = 0;
-});
-
-function renderEntries() {
-  entryList.innerHTML = ""; // Clear before re-rendering
-  entries.forEach((entry, index) => {
-    const div = document.createElement("div");
-    div.style.padding = "8px 0";
-    div.style.borderBottom = "1px solid #333";
-    div.innerHTML = `
-      <strong>${entry.time}</strong> — ${entry.subject} (${entry.type}, ${entry.room})
-    `;
-    entryList.appendChild(div);
-  });
-}
+    handleDateClick(currentDate.getDate(), currentDate.getMonth(), currentDate.getFullYear());
