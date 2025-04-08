@@ -132,6 +132,14 @@ const selectedDateDisplay = document.getElementById("selected-date");
       roomSelect.selectedIndex = 0;
       showNotification("New class entry added.");
     });
+    const menuIcon = document.getElementById("grid-icon");
+    const sideTab = document.getElementById("side-tab");
+
+    menuIcon.addEventListener("click", () => {
+      const isOpen = sideTab.style.transform === "translateX(0%)";
+      sideTab.style.transform = isOpen ? "translateX(-100%)" : "translateX(0%)";
+    });
+
 
     const bellIcon = document.getElementById("bell-icon");
     const notificationDropdown = document.getElementById("notification-dropdown");
@@ -180,4 +188,13 @@ const selectedDateDisplay = document.getElementById("selected-date");
     
       notificationItems.prepend(item); // newest on top
     }
+    document.addEventListener("click", (e) => {
+      if (
+        !sideTab.contains(e.target) &&
+        !menuIcon.contains(e.target)
+      ) {
+        sideTab.style.transform = "translateX(-100%)";
+      }
+    });
+    
     
