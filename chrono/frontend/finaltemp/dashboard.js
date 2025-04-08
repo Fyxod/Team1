@@ -130,7 +130,25 @@ const selectedDateDisplay = document.getElementById("selected-date");
       subjectInput.value = "";
       typeSelect.selectedIndex = 0;
       roomSelect.selectedIndex = 0;
+      showNotification("New class entry added.");
     });
+
+    const bellIcon = document.getElementById("bell-icon");
+    const notificationDropdown = document.getElementById("notification-dropdown");
+    const notificationItems = document.getElementById("notification-items");
+
+    bellIcon.addEventListener("click", () => {
+      const isVisible = notificationDropdown.style.display === "block";
+      notificationDropdown.style.display = isVisible ? "none" : "block";
+    });
+
+    // Optional: click outside to close
+    document.addEventListener("click", (e) => {
+      if (!bellIcon.contains(e.target) && !notificationDropdown.contains(e.target)) {
+        notificationDropdown.style.display = "none";
+      }
+    });
+
 
     function renderEntries() {
       entryList.innerHTML = "";
@@ -146,3 +164,20 @@ const selectedDateDisplay = document.getElementById("selected-date");
 
     createCalendar(currentDate.getFullYear(), currentDate.getMonth());
     handleDateClick(currentDate.getDate(), currentDate.getMonth(), currentDate.getFullYear());
+
+    
+
+    function showNotification(message) {
+      const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      const item = document.createElement("div");
+      item.style.padding = "8px";
+      item.style.borderBottom = "1px solid #444";
+      item.innerHTML = `<strong style="color: #fff;">${message}</strong><br><span style="color: #888; font-size: 13px;">${time}</span>`;
+      
+      if (notificationItems.textContent.includes("No notifications")) {
+        notificationItems.innerHTML = "";
+      }
+    
+      notificationItems.prepend(item); // newest on top
+    }
+    
