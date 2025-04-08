@@ -30,6 +30,16 @@
       gap: 10px;
     }
 
+    .navbar-center {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      color: #ccc;
+      font-size: 18px;
+      font-family: 'League Spartan', sans-serif;
+    }
+
+
     .icon-button {
       background: none;
       border: none;
@@ -73,6 +83,7 @@
       </button>
       <span class="brand">chrono</span>
     </div>
+    <div class="navbar-center" id="current-date"></div>
     <div class="navbar-right">
       <button class="icon-button" id="bell-icon">
         <span class="material-symbols-outlined">notifications</span>
@@ -82,9 +93,52 @@
       </button>
     </div>
   </div>
-  <div id="calendar-wrapper" style="display: flex; justify-content: flex-end; margin-top: 30px; padding-right: 40px;">
-    <div id="calendar-container"></div>
+  <div style="display: flex; height: calc(100vh - 60px);">
+    <div style="
+  width: 33.3333%;
+  border-right: 1px solid #444;
+  padding: 20px;
+  box-sizing: border-box;
+">
+  <div id="selected-date" style="
+    font-family: 'League Spartan', sans-serif;
+    font-size: 20px;
+    color: #ccc;
+    margin-bottom: 20px;
+  ">
+    Selected: —
   </div>
+
+  <!-- Entity Section -->
+<div id="entity-form" style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px; color: white; font-family: 'League Spartan', sans-serif; margin-top: 50px;">
+  <input id="timeInput" type="text" placeholder="Time" style="padding: 6px 10px; background: #1e1e1e; border: 1px solid #d3d3d3; border-radius: 4px; font-size: 16px; color: #d3d3d3; width: 50px;" />
+  <input id="subjectInput" type="text" placeholder="Subject" style="padding: 6px 10px; background: #1e1e1e; border: 1px solid #d3d3d3; border-radius: 4px; font-size: 16px; color: #d3d3d3; width: 100px;" />
+  <select id="typeSelect" style="padding: 6px 12px; background: #d3d3d3; border: none; font-size: 16px; border-radius: 4px; appearance: none; color: #000;">
+    <option disabled selected>Type</option>
+    <option>Lec</option>
+    <option>Lab</option>
+    <option>Tut</option>
+  </select>
+  <select id="roomSelect" style="padding: 6px 12px; background: #d3d3d3; border: none; font-size: 16px; border-radius: 4px; appearance: none; color: #000;">
+    <option disabled selected>Room</option>
+    <option>Room A</option>
+    <option>Room B</option>
+  </select>
+  <button id="addEntry" style="padding: 6px 16px; background: #4caf50; color: white; border: none; border-radius: 4px; font-size: 16px; cursor: pointer;">Add</button>
+</div>
+
+<!-- Where entries will be shown -->
+<div id="entryList" style="margin-top: 30px; color: #ccc; font-family: 'League Spartan', sans-serif;"></div>
+
+   
+  
+</div>
+  
+    <div style="flex: 1; display: flex; justify-content: flex-end; padding: 30px 40px;">
+      <div id="calendar-container"></div>
+    </div>
+  </div>
+  
   <script src="dashboard.js" defer></script>
 </body>
 </html>
