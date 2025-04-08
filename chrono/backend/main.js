@@ -8,6 +8,9 @@ const classRoutes = require("./routes/classRoutes");
 const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
 const batchRoutes = require("./routes/batchRoutes");
+const notificationRoutes = require("./routes/notificationRoutes");
+
+
 // const itemRoutes = require("./routes/itemRoutes");
 
 
@@ -34,6 +37,7 @@ app.use("/api/users", userRoutes);
 app.use("/api/classes", classRoutes);
 app.use("/api/attendance", attendanceRoutes);
 app.use("/api/batches", batchRoutes);
+app.use("/api/notifications", notificationRoutes);
 // app.use("/api/items", itemRoutes);
 
 

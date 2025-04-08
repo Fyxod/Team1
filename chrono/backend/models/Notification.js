@@ -2,14 +2,18 @@ const mongoose = require("mongoose");
 
 const notificationSchema = new mongoose.Schema(
   {
-    message: { type: String, required: true },
-    class: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Class",
-    },
     batch: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Batch",
+      required: true,
+    },
+    title: {
+      type: String,
+      required: true,
+    },
+    message: {
+      type: String,
+      required: true,
     },
   },
   {
@@ -17,4 +21,6 @@ const notificationSchema = new mongoose.Schema(
   }
 );
 
-module.exports = mongoose.model("Notification", notificationSchema);
+const Notification = mongoose.model("Notification", notificationSchema);
+
+module.exports = Notification;

@@ -4,15 +4,18 @@ const Batch = require("../models/Batch");
 const router = express.Router();
 
 // Create a Batch (Admin only)
-router.post("/", protect, authorizeRoles("admin"), async (req, res) => {
-  try {
-    const { name, code } = req.body;
-    const batch = await Batch.create({ name, code });
-    res.status(201).json(batch);
-  } catch (error) {
-    res.status(400).json({ message: error.message });
+router.post(
+  "/",
+  /*protect, authorizeRoles("admin"),*/ async (req, res) => {
+    try {
+      const { name, code } = req.body;
+      const batch = await Batch.create({ name, code });
+      res.status(201).json(batch);
+    } catch (error) {
+      res.status(400).json({ message: error.message });
+    }
   }
-});
+);
 
 // Get All Batches (any logged in user)
 router.get("/", protect, async (req, res) => {
@@ -21,7 +24,7 @@ router.get("/", protect, async (req, res) => {
 });
 
 // Update a Batch (Admin only)
-router.put("/:id", protect, authorizeRoles("admin"), async (req, res) => {
+router.put("/:id", /*protect, authorizeRoles("admin"),*/ async (req, res) => {
   try {
     const batch = await Batch.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
