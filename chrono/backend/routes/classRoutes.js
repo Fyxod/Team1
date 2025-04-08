@@ -7,13 +7,14 @@ const {
   deleteClass,
   getClassesByBatch,
 } = require("../controllers/classController");
+const authenticateToken = require("../middleware/authenticateToken");
 
-// Only admin and teacher can create, update, delete
-router.post("/", protect, createClass);
-router.put("/:id", protect, updateClass);
-router.delete("/:id", protect, deleteClass);
 
-// All users can view classes for their batch
-router.get("/batch/:batchId", protect, getClassesByBatch);
+
+
+router.post("/", authenticateToken, createClass);
+router.put("/:id", authenticateToken, updateClass);
+router.delete("/:id", authenticateToken, deleteClass);
+router.get("/batch/:batchId", authenticateToken, getClassesByBatch);
 
 module.exports = router;

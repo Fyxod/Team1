@@ -7,7 +7,7 @@ const router = express.Router();
 // Get all users (admin only)
 router.get("/", protect, authorizeRoles("admin"), async (req, res) => {
   try {
-    const users = await User.find().select("name email role"); // Only select what you need
+    const users = await User.find().select("name email role"); 
     res.json(users);
   } catch (error) {
     res.status(500).json({ message: error.message });

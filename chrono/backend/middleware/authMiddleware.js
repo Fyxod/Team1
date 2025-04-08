@@ -2,7 +2,7 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 
-// Middleware to protect routes
+// mw so that i can protect the routes
 const protect = async (req, res, next) => {
   let token;
 
@@ -12,8 +12,7 @@ const protect = async (req, res, next) => {
   ) {
     try {
       token = req.headers.authorization.split(" ")[1];
-      const decoded = jwt.verify(token, "secretkey"); // Later move to process.env
-
+      const decoded = jwt.verify(token, process.env.secretkey); 
       req.user = await User.findById(decoded.id).select("-password");
 
       if (!req.user) {
