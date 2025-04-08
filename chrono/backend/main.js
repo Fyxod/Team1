@@ -6,6 +6,7 @@ const bodyParser = require("body-parser");
 const attendanceRoutes = require("./routes/attendanceRoutes");
 const classRoutes = require("./routes/classRoutes");
 const authRoutes = require("./routes/authRoutes");
+const userRoutes = require("./routes/userRoutes");
 // const itemRoutes = require("./routes/itemRoutes");
 
 
@@ -28,6 +29,7 @@ mongoose
 
 //routes vagera banao band darwaazon ka kya faayda
 app.use("/api/auth", authRoutes);
+app.use("/api/users", userRoutes);
 app.use("/api/classes", classRoutes);
 app.use("/api/attendance", attendanceRoutes);
 // app.use("/api/items", itemRoutes);

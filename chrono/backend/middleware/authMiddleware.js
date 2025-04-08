@@ -1,48 +1,47 @@
-const express = require("express");
-const bcrypt = require("bcryptjs");
+// middleware/authMiddleware.js
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 
-const router = express.Router();
+// Middleware to protect routes
+const protect = async (req, res, next) => {
+  let token;
 
-// Signup Route
-router.post("/signup", async (req, res) => {
-  try {
-    const { username, email, password } = req.body;
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith("Bearer")
+  ) {
+    try {
+      token = req.headers.authorization.split(" ")[1];
+      const decoded = jwt.verify(token, "secretkey"); // Later move to process.env
 
-    const existingUser = await User.findOne({ email });
-    if (existingUser)
-      return res.status(400).json({ message: "User already exists" });
+      req.user = await User.findById(decoded.id).select("-password");
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+      if (!req.user) {
+        return res
+          .status(401)
+          .json({ message: "Not authorized, user not found" });
+      }
 
-    const newUser = new User({ username, email, password: hashedPassword });
-    await newUser.save();
-
-    res.status(201).json({ message: "User created successfully" });
-  } catch (err) {
-    res.status(500).json({ message: err.message });
+      next();
+    } catch (error) {
+      console.error(error);
+      res.status(401).json({ message: "Not authorized, token invalid" });
+    }
+  } else {
+    res.status(401).json({ message: "Not authorized, no token" });
   }
-});
+};
 
-// Login Route
-router.post("/login", async (req, res) => {
-  try {
-    const { email, password } = req.body;
+// Middleware to authorize roles
+const authorizeRoles = (...roles) => {
+  return (req, res, next) => {
+    if (!roles.includes(req.user.role)) {
+      return res
+        .status(403)
+        .json({ message: `Access denied for role: ${req.user.role}` });
+    }
+    next();
+  };
+};
 
-    const user = await User.findOne({ email });
-    if (!user) return res.status(400).json({ message: "Invalid credentials" });
-
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch)
-      return res.status(400).json({ message: "Invalid credentials" });
-
-    const token = jwt.sign({ id: user._id }, "secretkey", { expiresIn: "1h" });
-
-    res.json({ token });
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-});
-
-module.exports = router;
+module.exports = { protect, authorizeRoles };
