@@ -60,7 +60,7 @@
       border-radius: 12px;
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
       width: 100%;
-      max-width: 350px;
+      max-width: 400px;
     }
 
     .profile-edit-container h2 {
@@ -101,6 +101,7 @@
       font-size: 16px;
       cursor: pointer;
       transition: background 0.2s;
+      margin-top: 10px;
     }
 
     .save-btn:hover {
@@ -125,29 +126,51 @@
   <div class="content-container">
     <div class="profile-edit-container">
       <h2>Edit Profile</h2>
+
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input id="name" type="text" placeholder="Full Name" />
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input id="email" type="email" placeholder="Email address" />
+      </div>
+
+      <div class="form-group">
+        <label for="batch">Batch</label>
+        <input id="batch" type="text" placeholder="e.g. 1P11" />
+      </div>
+
       <div class="form-group">
         <label for="username">Username</label>
         <input id="username" type="text" placeholder="Enter username" />
       </div>
+
       <div class="form-group">
         <label for="newPassword">New Password</label>
         <input id="newPassword" type="password" placeholder="New password" />
       </div>
+
       <div class="form-group">
         <label for="confirmPassword">Confirm Password</label>
         <input id="confirmPassword" type="password" placeholder="Confirm password" />
       </div>
+
       <button class="save-btn" onclick="saveChanges()">Save Changes</button>
     </div>
   </div>
 
   <script>
     function saveChanges() {
+      const name = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const batch = document.getElementById('batch').value.trim();
       const username = document.getElementById('username').value.trim();
       const newPassword = document.getElementById('newPassword').value;
       const confirmPassword = document.getElementById('confirmPassword').value;
 
-      if (!username || !newPassword || !confirmPassword) {
+      if (!name || !email || !batch || !username || !newPassword || !confirmPassword) {
         alert("Please fill in all fields.");
         return;
       }
@@ -157,8 +180,8 @@
         return;
       }
 
-      // You could add your saving logic here
-      alert("Profile updated!");
+      // Placeholder for actual save logic
+      alert("Profile updated successfully!");
     }
   </script>
 </body>
