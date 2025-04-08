@@ -1,6 +1,5 @@
 const Class = require("../models/Class");
 
-// Create a class
 const createClass = async (req, res) => {
   try {
     const {
@@ -35,7 +34,7 @@ const createClass = async (req, res) => {
   }
 };
 
-// Update a class
+
 const updateClass = async (req, res) => {
   try {
     const classToUpdate = await Class.findById(req.params.id);
@@ -60,7 +59,7 @@ const updateClass = async (req, res) => {
   }
 };
 
-// Delete a class
+
 const deleteClass = async (req, res) => {
   try {
     const classToDelete = await Class.findById(req.params.id);
@@ -81,7 +80,7 @@ const deleteClass = async (req, res) => {
   }
 };
 
-// Get classes by batch
+
 const getClassesByBatch = async (req, res) => {
   try {
     const batchId = req.params.batchId;

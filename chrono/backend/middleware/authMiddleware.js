@@ -31,7 +31,7 @@ const protect = async (req, res, next) => {
   }
 };
 
-// Middleware to authorize roles
+
 const authorizeRoles = (...roles) => {
   return (req, res, next) => {
     if (!roles.includes(req.user.role)) {

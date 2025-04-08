@@ -4,12 +4,12 @@ const batchSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
-    unique: true, // Each batch should have a unique name like "Batch A", "Batch B"
+    unique: true, 
   },
   code: {
     type: String,
     required: true,
-    unique: true, // This will be the joining code for students & teachers
+    unique: true, 
   },
 });
 
