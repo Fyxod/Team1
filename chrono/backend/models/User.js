@@ -1,31 +1,29 @@
-// backend/models/User.js
-
 const mongoose = require("mongoose");
 
-const userSchema = new mongoose.Schema({
-  username: {
-    type: String,
-    required: true,
-    minlength: 3,
+const userSchema = new mongoose.Schema(
+  {
+    name: { type: String, required: true },
+    email: { type: String, required: true, unique: true },
+    password: { type: String, required: true },
+    role: {
+      type: String,
+      enum: ["student", "teacher", "admin"],
+      default: "student",
+    },
+    batch: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Batch",
+    }, // For students
+    batches: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Batch",
+      },
+    ], // For teachers (array of batches)
   },
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-    lowercase: true,
-  },
-  password: {
-    type: String,
-    required: true,
-    minlength: 6,
-  },
-  role: {
-    type: String,
-    enum: ["student", "teacher", "admin"],
-    default: "student",
-  },
-});
+  {
+    timestamps: true,
+  }
+);
 
-const User = mongoose.model("User", userSchema);
-
-module.exports = User;
+module.exports = mongoose.model("User", userSchema);

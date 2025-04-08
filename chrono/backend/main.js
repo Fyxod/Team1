@@ -7,6 +7,7 @@ const attendanceRoutes = require("./routes/attendanceRoutes");
 const classRoutes = require("./routes/classRoutes");
 const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
+const batchRoutes = require("./routes/batchRoutes");
 // const itemRoutes = require("./routes/itemRoutes");
 
 
@@ -32,6 +33,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/classes", classRoutes);
 app.use("/api/attendance", attendanceRoutes);
+app.use("/api/batches", batchRoutes);
 // app.use("/api/items", itemRoutes);
 
 
