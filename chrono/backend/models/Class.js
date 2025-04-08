@@ -15,14 +15,14 @@ const classSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    day: {
-      type: String,
-      required: true, // example: "Monday"
-    },
-    date: {
-      type: Date,
-      required: true, // specific calendar date
-    },
+    // day: {
+    //   type: String,
+    //   required: true, // example: "Monday"
+    // },
+    // date: {
+    //   type: Date,
+    //   required: true, // specific calendar date
+    // },
     timeSlot: {
       type: String,
       required: true, // example: "10:00 AM - 11:00 AM"
