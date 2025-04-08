@@ -8,13 +8,24 @@ const {
   getClassesByBatch,
 } = require("../controllers/classController");
 const authenticateToken = require("../middleware/authenticateToken");
+const authorizeRoles = require("../middleware/authorizeRole");
 
 
 
 
-router.post("/", authenticateToken, createClass);
-router.put("/:id", authenticateToken, updateClass);
-router.delete("/:id", authenticateToken, deleteClass);
-router.get("/batch/:batchId", authenticateToken, getClassesByBatch);
+router.post("/", authenticateToken, authorizeRoles("Teacher"), createClass);
+router.put("/:id", authenticateToken, authorizeRoles("Teacher"), updateClass);
+router.delete(
+  "/:id",
+  authenticateToken,
+  authorizeRoles("Teacher"),
+  deleteClass
+);
+router.get(
+  "/batch/:batchId",
+  authenticateToken,
+  authorizeRoles("Teacher"),
+  getClassesByBatch
+);
 
 module.exports = router;

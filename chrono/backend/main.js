@@ -44,7 +44,7 @@ mongoose
 
 
 //routes vagera banao band darwaazon ka kya faayda
-app.use("/api/auth", authRoutes,authenticateToken);
+app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes,authenticateToken);
 app.use("/api/classes", classRoutes,authenticateToken);
 app.use("/api/batches", batchRoutes,authenticateToken);
