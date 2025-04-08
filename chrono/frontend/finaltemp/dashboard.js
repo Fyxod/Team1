@@ -8,6 +8,7 @@ const selectedDateDisplay = document.getElementById("selected-date");
     const dateElement = document.getElementById("current-date");
 
     let currentDate = new Date();
+    let selectedDate = null;
     let currentDayKey = null;
 
     let weeklyEntries = {
@@ -45,18 +46,43 @@ const selectedDateDisplay = document.getElementById("selected-date");
       for (let day = 1; day <= daysInMonth; day++) {
         const dateObj = new Date(year, month, day);
         const isToday = day === today.getDate() && month === today.getMonth() && year === today.getFullYear();
+        const isSelected = selectedDate &&
+                           dateObj.getDate() === selectedDate.getDate() &&
+                           dateObj.getMonth() === selectedDate.getMonth() &&
+                           dateObj.getFullYear() === selectedDate.getFullYear();
+      
         const isPast = dateObj < new Date(today.getFullYear(), today.getMonth(), today.getDate());
-        const bgColor = isToday ? "#4caf50" : isPast ? "#1a1a1a" : "#262626";
+        
+        const bgColor = isToday
+          ? "#4caf50"
+          : isSelected
+          ? "#1976d2"
+          : isPast
+          ? "#1a1a1a"
+          : "#262626";
+      
         const textColor = isPast ? "#777" : "white";
         const hoverColor = isToday ? "#43a047" : isPast ? "#1a1a1a" : "#3c3c3c";
         const cursorStyle = isPast ? "default" : "pointer";
         const clickHandler = isPast ? "" : `onclick="handleDateClick(${day}, ${month}, ${year})"`;
-    
+      
         calendarHTML += `
-          <div style="padding: 20px; border-radius: 10px; background: ${bgColor}; color: ${textColor}; cursor: ${cursorStyle}; transition: background 0.2s, transform 0.2s; font-weight: ${isToday ? "bold" : "normal"}; box-shadow: ${isToday ? "0 0 12px #4caf50aa" : "none"}; transform: ${isToday ? "scale(1.08)" : "none"}; font-size: 22px;" ${clickHandler} ${!isPast ? `onmouseover="this.style.background='${hoverColor}'" onmouseout="this.style.background='${bgColor}'"` : ""}>
+          <div style="
+            padding: 20px;
+            border-radius: 10px;
+            background: ${bgColor};
+            color: ${textColor};
+            cursor: ${cursorStyle};
+            transition: background 0.2s, transform 0.2s;
+            font-weight: ${isToday ? "bold" : "normal"};
+            box-shadow: ${isToday ? "0 0 12px #4caf50aa" : isSelected ? "0 0 10px #1976d2aa" : "none"};
+            transform: ${isToday || isSelected ? "scale(1.08)" : "none"};
+            font-size: 22px;
+          " ${clickHandler} ${!isPast ? `onmouseover="this.style.background='${hoverColor}'" onmouseout="this.style.background='${bgColor}'"` : ""}>
             ${day}
           </div>`;
       }
+      
     
       calendarHTML += `</div></div>`;
       document.getElementById("calendar-container").innerHTML = calendarHTML;
@@ -74,13 +100,15 @@ const selectedDateDisplay = document.getElementById("selected-date");
     
 
     function handleDateClick(day, month, year) {
-      const date = new Date(year, month, day);
-      const dayName = date.toLocaleDateString(undefined, { weekday: "short" });
+      selectedDate = new Date(year, month, day);
+      const dayName = selectedDate.toLocaleDateString(undefined, { weekday: "short" });
       const formatted = `${dayName}, ${String(day).padStart(2, '0')}/${String(month + 1).padStart(2, '0')}`;
       currentDayKey = dayName;
       if (selectedDateDisplay) selectedDateDisplay.textContent = `Selected: ${formatted}`;
       renderEntries();
+      createCalendar(currentDate.getFullYear(), currentDate.getMonth()); // Refresh to highlight selected
     }
+    
 
     addEntryButton.addEventListener("click", () => {
       if (!currentDayKey) {
@@ -102,7 +130,33 @@ const selectedDateDisplay = document.getElementById("selected-date");
       subjectInput.value = "";
       typeSelect.selectedIndex = 0;
       roomSelect.selectedIndex = 0;
+      showNotification("New class entry added.");
     });
+    const menuIcon = document.getElementById("grid-icon");
+    const sideTab = document.getElementById("side-tab");
+
+    menuIcon.addEventListener("click", () => {
+      const isOpen = sideTab.style.transform === "translateX(0%)";
+      sideTab.style.transform = isOpen ? "translateX(-100%)" : "translateX(0%)";
+    });
+
+
+    const bellIcon = document.getElementById("bell-icon");
+    const notificationDropdown = document.getElementById("notification-dropdown");
+    const notificationItems = document.getElementById("notification-items");
+
+    bellIcon.addEventListener("click", () => {
+      const isVisible = notificationDropdown.style.display === "block";
+      notificationDropdown.style.display = isVisible ? "none" : "block";
+    });
+
+    // Optional: click outside to close
+    document.addEventListener("click", (e) => {
+      if (!bellIcon.contains(e.target) && !notificationDropdown.contains(e.target)) {
+        notificationDropdown.style.display = "none";
+      }
+    });
+
 
     function renderEntries() {
       entryList.innerHTML = "";
@@ -118,3 +172,29 @@ const selectedDateDisplay = document.getElementById("selected-date");
 
     createCalendar(currentDate.getFullYear(), currentDate.getMonth());
     handleDateClick(currentDate.getDate(), currentDate.getMonth(), currentDate.getFullYear());
+
+    
+
+    function showNotification(message) {
+      const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      const item = document.createElement("div");
+      item.style.padding = "8px";
+      item.style.borderBottom = "1px solid #444";
+      item.innerHTML = `<strong style="color: #fff;">${message}</strong><br><span style="color: #888; font-size: 13px;">${time}</span>`;
+      
+      if (notificationItems.textContent.includes("No notifications")) {
+        notificationItems.innerHTML = "";
+      }
+    
+      notificationItems.prepend(item); // newest on top
+    }
+    document.addEventListener("click", (e) => {
+      if (
+        !sideTab.contains(e.target) &&
+        !menuIcon.contains(e.target)
+      ) {
+        sideTab.style.transform = "translateX(-100%)";
+      }
+    });
+    
+    
